@@ -1,21 +1,23 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-
+import os
 from cryptography.fernet import Fernet
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
+# SECRET KEY (for sessions)
 app.secret_key = "ocean_secret_key"
 
-# LOAD ENCRYPTION KEY
-import os
-from cryptography.fernet import Fernet
-
+# =========================
+# ENCRYPTION KEY (RENDER SAFE)
+# =========================
 key = os.getenv("FERNET_KEY")
 fer = Fernet(key)
 
-# DATABASE SETUP
+# =========================
+# DATABASE SETUP (runs once)
+# =========================
 conn = sqlite3.connect("database.db")
 cursor = conn.cursor()
 
@@ -39,10 +41,14 @@ CREATE TABLE IF NOT EXISTS passwords(
 conn.commit()
 conn.close()
 
-# HOME
+# =========================
+# ROUTES
+# =========================
+
 @app.route("/")
 def home():
     return redirect("/login")
+
 
 # SIGNUP
 @app.route("/signup", methods=["GET", "POST"])
@@ -59,20 +65,18 @@ def signup():
         cursor = conn.cursor()
 
         try:
-
             cursor.execute(
                 "INSERT INTO users(username, password) VALUES(?, ?)",
                 (username, hashed_password)
             )
-
             conn.commit()
-
             return redirect("/login")
 
         except:
             return "Username already exists"
 
     return render_template("signup.html")
+
 
 # LOGIN
 @app.route("/login", methods=["GET", "POST"])
@@ -105,6 +109,7 @@ def login():
 
     return render_template("login.html")
 
+
 # DASHBOARD
 @app.route("/dashboard")
 def dashboard():
@@ -116,6 +121,7 @@ def dashboard():
         "dashboard.html",
         username=session["username"]
     )
+
 
 # ADD PASSWORD
 @app.route("/add_password", methods=["GET", "POST"])
@@ -136,23 +142,21 @@ def add_password():
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             INSERT INTO passwords(user_id, website, password)
             VALUES(?, ?, ?)
-            """,
-            (
-                session["user_id"],
-                website,
-                encrypted_password
-            )
-        )
+        """, (
+            session["user_id"],
+            website,
+            encrypted_password
+        ))
 
         conn.commit()
 
         return redirect("/view_passwords")
 
     return render_template("add_password.html")
+
 
 # VIEW PASSWORDS
 @app.route("/view_passwords")
@@ -167,29 +171,20 @@ def view_passwords():
     cursor = conn.cursor()
 
     if search:
-
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT id, website, password
             FROM passwords
             WHERE user_id=? AND website LIKE ?
-            """,
-            (
-                session["user_id"],
-                "%" + search + "%"
-            )
-        )
-
+        """, (
+            session["user_id"],
+            "%" + search + "%"
+        ))
     else:
-
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT id, website, password
             FROM passwords
             WHERE user_id=?
-            """,
-            (session["user_id"],)
-        )
+        """, (session["user_id"],))
 
     data = cursor.fetchall()
 
@@ -201,18 +196,13 @@ def view_passwords():
             encrypted_password.encode()
         ).decode()
 
-        passwords.append(
-            (
-                password_id,
-                website,
-                decrypted
-            )
-        )
+        passwords.append((password_id, website, decrypted))
 
     return render_template(
         "view_passwords.html",
         passwords=passwords
     )
+
 
 # DELETE PASSWORD
 @app.route("/delete_password/<int:id>")
@@ -224,29 +214,26 @@ def delete_password(id):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
+    cursor.execute("""
         DELETE FROM passwords
         WHERE id=? AND user_id=?
-        """,
-        (
-            id,
-            session["user_id"]
-        )
-    )
+    """, (id, session["user_id"]))
 
     conn.commit()
 
     return redirect("/view_passwords")
 
+
 # LOGOUT
 @app.route("/logout")
 def logout():
-
     session.clear()
-
     return redirect("/login")
 
-# RUN APP
+
+# =========================
+# RUN SERVER (RENDER FIXED)
+# =========================
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
