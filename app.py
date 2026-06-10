@@ -9,9 +9,10 @@ app = Flask(__name__)
 app.secret_key = "ocean_secret_key"
 
 # LOAD ENCRYPTION KEY
-with open("key.key", "rb") as file:
-    key = file.read()
+import os
+from cryptography.fernet import Fernet
 
+key = os.getenv("FERNET_KEY")
 fer = Fernet(key)
 
 # DATABASE SETUP
