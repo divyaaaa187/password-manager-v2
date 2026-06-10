@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>WAVE~LOCK Login</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌊WAVE~LOCK🌊</h1>
+
+    <p class="subtitle">
+      <i> Ride the waves of security with confidence</i>
+    </p>
+
+    <div class="sea-icons">
+        🐚 ⭐ 🪸 🐠 🌊
+    </div>
+
+    <form method="POST">
+
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required>
+
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
+
+        <button type="submit">
+            🌊 Login
+        </button>
+
+    </form>
+
+    <div class="links">
+
+        Don't have an account?
+
+        <a href="/signup">
+            Create One
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

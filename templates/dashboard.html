@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>WAVE~LOCK</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- LEFT MERMAID SECTION -->
+
+<div class="mermaid-section">
+
+    <div class="mermaid">
+         <img src="{{ url_for('static',
+    filename='images/mermaid.png') }}">
+    </div>
+
+    <div class="speech-box">
+
+        <p id="ocean-message">
+
+            🌊 Welcome to Ocean Vault
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- MAIN CONTAINER -->
+
+<div class="container">
+
+    <h1>🌊 WAVE~LOCK</h1>
+
+    <p class="subtitle">
+        Welcome back, {{ username }}
+    </p>
+
+    <div class="sea-icons">
+        🐚 ⭐ 🪸 🐠 🌊
+    </div>
+
+    <div class="dashboard-buttons">
+
+        <a href="/add_password">
+            <button>
+                🫧 Save Password
+            </button>
+        </a>
+
+        <a href="/view_passwords">
+            <button>
+                🐚 View Passwords
+            </button>
+        </a>
+
+        <a href="/logout">
+            <button>
+                🌊 Logout
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+<!-- RIGHT SIDE OCEAN -->
+<div class="fish fish1">🐠</div>
+<div class="fish fish2">🐟</div>
+<div class="fish fish3">🐡</div>
+<!-- BUBBLES -->
+
+<div class="bubble bubble1"></div>
+<div class="bubble bubble2"></div>
+<div class="bubble bubble3"></div>
+<div class="bubble bubble4"></div>
+
+<script>
+
+const messages = [
+
+"🔐 Use symbols for stronger passwords",
+
+"🌊 Octopuses have 3 hearts",
+
+"🐚 Never reuse passwords",
+
+"⭐ Longer passwords are safer",
+
+"🐠 Seahorses mate for life",
+
+"🪼 Jellyfish existed before dinosaurs",
+
+"🌊 Protect your digital treasures"
+
+];
+
+let index = 0;
+
+function changeMessage(){
+
+    document.getElementById("ocean-message").innerText =
+    messages[index];
+
+    index++;
+
+    if(index >= messages.length){
+        index = 0;
+    }
+}
+
+setInterval(changeMessage, 3000);
+
+</script>
+
+</body>
+</html>

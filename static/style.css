@@ -1,0 +1,384 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:
+    linear-gradient(
+        to bottom,
+        #021B33,
+        #063852,
+        #0A4F70,
+        #127C8A,
+        #26C6DA
+    );
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    position:relative;
+
+    color:white;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+
+    width:500px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:25px;
+
+    padding:40px;
+
+    text-align:center;
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    z-index:10;
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* HEADINGS */
+
+h1{
+
+    font-size:48px;
+
+    margin-bottom:20px;
+
+    color:#B2FFFF;
+
+    text-shadow:
+    0 0 15px rgba(178,255,255,0.6);
+}
+
+.subtitle{
+
+    margin-bottom:25px;
+
+    color:#E0FFFF;
+
+    font-size:18px;
+}
+
+.sea-icons{
+
+    font-size:28px;
+
+    margin-bottom:30px;
+}
+
+/* BUTTONS */
+
+.dashboard-buttons{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7DF9FF,
+        #4DD0E1
+    );
+
+    color:#003B46;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+button:hover{
+
+    transform:scale(1.03);
+
+    background:
+    linear-gradient(
+        135deg,
+        #B2FFFF,
+        #80DEEA
+    );
+}
+
+/* INPUTS */
+
+input{
+
+    width:100%;
+
+    padding:15px;
+
+    margin:15px 0;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:white;
+
+    font-size:16px;
+
+    outline:none;
+}
+
+input::placeholder{
+    color:#DDFEFF;
+}
+
+/* LINKS */
+
+.links{
+    margin-top:20px;
+}
+
+a{
+    text-decoration:none;
+    color:#B2FFFF;
+}
+
+/* TABLE */
+
+table{
+
+    width:100%;
+
+    margin-top:20px;
+
+    border-collapse:collapse;
+}
+
+th{
+
+    background:rgba(125,249,255,0.2);
+
+    padding:15px;
+
+    color:#B2FFFF;
+}
+
+td{
+
+    padding:15px;
+
+    border-bottom:
+    1px solid rgba(255,255,255,0.15);
+}
+
+/* MERMAID */
+
+.mermaid-section{
+
+    position:absolute;
+
+    left:40px;
+
+    top:42%;
+
+    transform:translateY(-50%);
+
+    text-align:center;
+
+    animation:floatMermaid 4s ease-in-out infinite;
+}
+
+.mermaid{
+
+    width:220px;
+
+    filter:
+    drop-shadow(0 0 20px rgba(125,249,255,0.5));
+}
+
+.speech-box{
+
+    margin-top:15px;
+
+    width:220px;
+
+    padding:18px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    color:#E0FFFF;
+}
+
+/* RIGHT SIDE FISH */
+
+.ocean-side{
+
+    position:absolute;
+
+    right:40px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+}
+
+.fish1, .fish2, .fish3 {
+    font-size: 60px;
+    position: absolute;
+}
+
+.fish1 {
+    position: absolute;
+    right: 60px;
+    top: 100px;
+    font-size: 60px;
+}
+
+.fish2 {
+    position: absolute;
+    right: 60px;
+    top: 300px;
+    font-size: 60px;
+}
+
+.fish3 {
+    position: absolute;
+    right: 60px;
+    top: 500px;
+    font-size: 60px;
+}
+/* BUBBLES */
+
+.bubble{
+
+    position:absolute;
+
+    bottom:-100px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,0.15);
+
+    animation:rise 12s infinite ease-in;
+}
+
+.bubble1{
+
+    width:30px;
+    height:30px;
+    left:10%;
+}
+
+.bubble2{
+
+    width:20px;
+    height:20px;
+    left:25%;
+
+    animation-duration:10s;
+}
+
+.bubble3{
+
+    width:40px;
+    height:40px;
+    right:20%;
+
+    animation-duration:14s;
+}
+
+.bubble4{
+
+    width:25px;
+    height:25px;
+    right:8%;
+
+    animation-duration:9s;
+}
+
+/* ANIMATIONS */
+
+@keyframes rise{
+
+    0%{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-1200px);
+        opacity:0;
+    }
+}
+
+@keyframes floatMermaid{
+
+    0%{
+        transform:translateY(-50%) translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-50%) translateY(-15px);
+    }
+
+    100%{
+        transform:translateY(-50%) translateY(0px);
+    }
+}
+
+@keyframes floatFish{
+
+    0%{
+        transform:translateX(0px);
+    }
+
+    50%{
+        transform:translateX(-15px);
+    }
+
+    100%{
+        transform:translateX(0px);
+    }
+}
