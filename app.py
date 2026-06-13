@@ -98,6 +98,7 @@ def login():
         )
 
         user = cursor.fetchone()
+        print("USER FOUND:",user)
 
         if user and check_password_hash(user[2], password):
 
