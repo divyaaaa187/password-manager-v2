@@ -267,6 +267,16 @@ td{
 
     transform:translateY(-50%);
 }
+/* Mobile fix */
+@media (max-width: 768px){
+
+    .fish{
+        font-size: 1.5rem;
+        right: 10px;
+        bottom: 20px;
+    }
+
+}
 
 .fish1, .fish2, .fish3 {
     font-size: 60px;
