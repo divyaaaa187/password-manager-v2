@@ -21,7 +21,12 @@ body{
 
     overflow:hidden;
 
-    display:flex;
+    @media (max-width: 768px){
+
+    .dashboard{
+        flex-direction: column;
+    }
+ }
 
     justify-content:center;
 
@@ -36,7 +41,9 @@ body{
 
 .container{
 
-    width:500px;
+    .container{
+    width: 90%;
+    max-width: 500px;
 
     background:rgba(255,255,255,0.08);
 
@@ -54,6 +61,7 @@ body{
 
     box-shadow:
     0 8px 32px rgba(0,0,0,0.4);
+}
 }
 
 /* HEADINGS */
@@ -222,7 +230,10 @@ td{
 
 .mermaid{
 
-    width:220px;
+   img{
+    max-width: 100%;
+    height: auto;
+  }
 
     filter:
     drop-shadow(0 0 20px rgba(125,249,255,0.5));
@@ -380,5 +391,25 @@ td{
 
     100%{
         transform:translateX(0px);
+    }
+}
+
+@media (max-width: 768px){
+
+    .container{
+        width: 95%;
+        padding: 20px;
+    }
+
+    h1{
+        font-size: 28px;
+    }
+
+    input{
+        width: 100%;
+    }
+
+    button{
+        width: 100%;
     }
 }
