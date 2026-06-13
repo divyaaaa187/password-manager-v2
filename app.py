@@ -12,7 +12,9 @@ app.secret_key = "ocean_secret_key"
 # =========================
 # ENCRYPTION KEY (RENDER SAFE)
 # =========================
-key = os.getenv("FERNET_KEY")
+with open("key.key", "rb") as file:
+    key = file.read()
+
 fer = Fernet(key)
 
 # =========================
