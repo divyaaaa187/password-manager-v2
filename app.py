@@ -223,19 +223,22 @@ def delete_password(id):
 @app.route("/admin")
 def admin():
 
-    if session.get("username") != "YOUR_ADMIN_USERNAME":
-        return "Access Denied"
-
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, username FROM users")
+    cursor.execute("SELECT id, username, email FROM users")
     users = cursor.fetchall()
+
+    cursor.execute("SELECT user_id, website, username, password FROM passwords")
+    passwords = cursor.fetchall()
 
     conn.close()
 
-    return render_template("admin.html", users=users)
-
+    return render_template(
+        "admin.html",
+        users=users,
+        passwords=passwords
+    )
 
 # LOGOUT
 @app.route("/logout")

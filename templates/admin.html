@@ -1,76 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #0f0f0f;
-            color: white;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        table {
-            width: 80%;
-            margin: auto;
-            margin-top: 30px;
-            border-collapse: collapse;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #333;
-            text-align: center;
-        }
-
-        th {
-            background: #222;
-        }
-
-        tr:hover {
-            background: #2a2a2a;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-        }
-
-    </style>
+    <title>Admin Dashboard</title>
 </head>
-
 <body>
 
-    <h2>🔐 User Database Dashboard</h2>
+<h1>Admin Dashboard</h1>
 
-    <div class="container">
+<h2>Users</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+    </tr>
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-            </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user[0] }}</td>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
-            {% for user in users %}
-            <tr>
-                <td>{{ user[0] }}</td>
-                <td>{{ user[1] }}</td>
-            </tr>
-            {% endfor %}
+<br>
 
-        </table>
+<h2>Saved Passwords</h2>
+<table border="1">
+    <tr>
+        <th>User ID</th>
+        <th>Website</th>
+        <th>Username</th>
+        <th>Encrypted Password</th>
+    </tr>
 
-    </div>
+    {% for p in passwords %}
+    <tr>
+        <td>{{ p[0] }}</td>
+        <td>{{ p[1] }}</td>
+        <td>{{ p[2] }}</td>
+        <td>{{ p[3] }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 </body>
 </html>
