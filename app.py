@@ -6,11 +6,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# SECRET KEY (for sessions)
+# =========================
+# PATH FIX (IMPORTANT)
+# =========================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database.db")
+
 app.secret_key = "ocean_secret_key"
 
 # =========================
-# ENCRYPTION KEY (RENDER SAFE)
+# ENCRYPTION KEY
 # =========================
 with open("key.key", "rb") as file:
     key = file.read()
@@ -18,9 +23,9 @@ with open("key.key", "rb") as file:
 fer = Fernet(key)
 
 # =========================
-# DATABASE SETUP (runs once)
+# DATABASE INIT
 # =========================
-conn = sqlite3.connect("database.db")
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 cursor.execute("""
@@ -57,13 +62,12 @@ def home():
 def signup():
 
     if request.method == "POST":
-
         username = request.form["username"]
         password = request.form["password"]
 
         hashed_password = generate_password_hash(password)
 
-        conn = sqlite3.connect("database.db")
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         try:
@@ -72,9 +76,11 @@ def signup():
                 (username, hashed_password)
             )
             conn.commit()
+            conn.close()
             return redirect("/login")
 
         except:
+            conn.close()
             return "Username already exists"
 
     return render_template("signup.html")
@@ -89,7 +95,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        conn = sqlite3.connect("database.db")
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         cursor.execute(
@@ -98,7 +104,9 @@ def login():
         )
 
         user = cursor.fetchone()
-        print("USER FOUND:",user)
+        conn.close()
+
+        print("USER ROW:", user)
 
         if user and check_password_hash(user[2], password):
 
@@ -120,10 +128,7 @@ def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
-    return render_template(
-        "dashboard.html",
-        username=session["username"]
-    )
+    return render_template("dashboard.html", username=session["username"])
 
 
 # ADD PASSWORD
@@ -138,23 +143,18 @@ def add_password():
         website = request.form["website"]
         password = request.form["password"]
 
-        encrypted_password = fer.encrypt(
-            password.encode()
-        ).decode()
+        encrypted_password = fer.encrypt(password.encode()).decode()
 
-        conn = sqlite3.connect("database.db")
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         cursor.execute("""
             INSERT INTO passwords(user_id, website, password)
             VALUES(?, ?, ?)
-        """, (
-            session["user_id"],
-            website,
-            encrypted_password
-        ))
+        """, (session["user_id"], website, encrypted_password))
 
         conn.commit()
+        conn.close()
 
         return redirect("/view_passwords")
 
@@ -170,7 +170,7 @@ def view_passwords():
 
     search = request.args.get("search", "")
 
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     if search:
@@ -178,10 +178,7 @@ def view_passwords():
             SELECT id, website, password
             FROM passwords
             WHERE user_id=? AND website LIKE ?
-        """, (
-            session["user_id"],
-            "%" + search + "%"
-        ))
+        """, (session["user_id"], "%" + search + "%"))
     else:
         cursor.execute("""
             SELECT id, website, password
@@ -190,21 +187,15 @@ def view_passwords():
         """, (session["user_id"],))
 
     data = cursor.fetchall()
+    conn.close()
 
     passwords = []
 
-    for password_id, website, encrypted_password in data:
+    for pid, website, enc_password in data:
+        decrypted = fer.decrypt(enc_password.encode()).decode()
+        passwords.append((pid, website, decrypted))
 
-        decrypted = fer.decrypt(
-            encrypted_password.encode()
-        ).decode()
-
-        passwords.append((password_id, website, decrypted))
-
-    return render_template(
-        "view_passwords.html",
-        passwords=passwords
-    )
+    return render_template("view_passwords.html", passwords=passwords)
 
 
 # DELETE PASSWORD
@@ -214,7 +205,7 @@ def delete_password(id):
     if "user_id" not in session:
         return redirect("/login")
 
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -223,8 +214,27 @@ def delete_password(id):
     """, (id, session["user_id"]))
 
     conn.commit()
+    conn.close()
 
     return redirect("/view_passwords")
+
+
+# ADMIN PANEL
+@app.route("/admin")
+def admin():
+
+    if session.get("username") != "YOUR_ADMIN_USERNAME":
+        return "Access Denied"
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, username FROM users")
+    users = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("admin.html", users=users)
 
 
 # LOGOUT
@@ -235,7 +245,7 @@ def logout():
 
 
 # =========================
-# RUN SERVER (RENDER FIXED)
+# RUN SERVER
 # =========================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
